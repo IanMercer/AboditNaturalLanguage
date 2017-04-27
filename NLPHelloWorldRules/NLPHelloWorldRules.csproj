@@ -43,12 +43,6 @@
     <Reference Include="AboditUnits, Version=3.4.0.0, Culture=neutral, PublicKeyToken=61959f32c73f981b, processorArchitecture=MSIL">
       <HintPath>..\packages\AboditUnits.3.4.116.2\lib\Net40\AboditUnits.dll</HintPath>
     </Reference>
-    <Reference Include="Autofac, Version=4.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.4.5.0\lib\net45\Autofac.dll</HintPath>
-    </Reference>
-    <Reference Include="Autofac.Configuration, Version=4.0.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.Configuration.4.0.1\lib\net45\Autofac.Configuration.dll</HintPath>
-    </Reference>
     <Reference Include="ImpromptuInterface, Version=6.2.2.0, Culture=neutral, PublicKeyToken=0b1781c923b2975b, processorArchitecture=MSIL">
       <HintPath>..\packages\ImpromptuInterface.6.2.2\lib\net40\ImpromptuInterface.dll</HintPath>
     </Reference>
@@ -72,9 +66,6 @@
     </Reference>
     <Reference Include="NLP-Wordnet-Extended, Version=3.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\AboditNLPWordnetExtended.3.4.116.2\lib\Net451\NLP-Wordnet-Extended.dll</HintPath>
-    </Reference>
-    <Reference Include="NLP.IoC.Autofac, Version=3.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.Extras.AboditNLP.3.4.116.2\lib\net46\NLP.IoC.Autofac.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.AppContext, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
