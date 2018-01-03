@@ -27,10 +27,7 @@ namespace HelloWorld
     /// 
     /// </summary>
 
-    // If you add a Produces attribute to say what types this parser can produce, you can instruct the engine to skip
-    // trying to use this parser when there is no possible match in the input string.
-    [Produces(typeof(ParsedToken))]
-    public class ParsedToken : Token, ITokenFactory
+    public class ParsedToken : Token
     {
         // A Parsed Token can have strongly typed values on it, here was have a simple int
         public int Value { get; set; }
@@ -44,6 +41,25 @@ namespace HelloWorld
         // The provided IDependencyScope also allows you to resolve additional services using your preferred dependency injection
         // technology
 
+        private readonly string text;
+
+        /// <summary>
+        /// Get the text for the tokem
+        /// </summary>
+        public override string Text => text;
+
+        public ParsedToken(string text, int value)
+        {
+            this.text = text;
+            this.Value = value;
+        }
+    }
+
+    /// <summary>
+    /// Sample Tokenfactory
+    /// </summary>
+    public class ParsedTokenFactory: ITokenFactory
+    { 
         public IEnumerable<TokenResult> Parse(NLPOptions options, int start, string input, params AllowedToken[] types)
         {
             int i = start;
@@ -76,7 +92,7 @@ namespace HelloWorld
 
             int value = 0;
             int.TryParse(extract, out value);
-            var token = new ParsedToken() { Original = input.Substring(i), Value = value };
+            var token = new ParsedToken(input.Substring(i), value);
 
             // Finally yield return each match that you have - there may be more than one
 

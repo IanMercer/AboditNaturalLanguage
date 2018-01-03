@@ -40,8 +40,8 @@ namespace NLPHelloWorldRules
         // this will handle edits that are even further out
         public NLPActionResult GrammarDump(define2 define, TokenPhrase phrase)
         {
-            st.Say("Sorry " + phrase.Original + " isn't in my dictionary");
-            intent.DefineSuggestions(st, phrase.Original);
+            st.Say("Sorry " + phrase.Text + " isn't in my dictionary");
+            intent.DefineSuggestions(st, phrase.Text);
             return NLPActionResult.None;
         }
     }

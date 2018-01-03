@@ -18,6 +18,10 @@ namespace NLPHelloWorldRules
         /// <summary>
         /// This sample rule recognizes a numeric expression
         /// </summary>
+        /// <remarks>
+        /// See also <see cref="UserEnteredATemporalExpression"/> which has a higher priority and claims
+        /// TemporalSets (which inherit from TokenExpression but for which we want a different rule)
+        /// </remarks>
         [Priority(500)]
         public NLPActionResult UserEnteredANumericExpression(TokenExpression tne)
         {
@@ -33,8 +37,7 @@ namespace NLPHelloWorldRules
             }
             else if (tne is TemporalSet)
             {
-                st.Say($"You entered a temporal expression {tne.Describe(true)}");
-                st.Say("You can use expressions like this in queries against DateTime fields");
+                throw new System.Exception("Check the relative priority of this rule and UserEnteredATemporalExpression");
             }
             else
             {
@@ -49,7 +52,7 @@ namespace NLPHelloWorldRules
         [Priority(1000)]
         public NLPActionResult UserEnteredANumericValue(TokenInt ti)
         {
-            st.Say("Hmmm .. so you want to know about " + ti.Original);
+            st.Say("Hmmm .. so you want to know about " + ti.Text);
             st.Say("Well, it's just a single value: " + ti.ValueInt);
             return NLPActionResult.None;
         }

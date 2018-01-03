@@ -100,9 +100,7 @@ namespace NLPHelloWorldRules
 
             store.Store(Lexeme.New.Verb("report", typeof(Verb.report), typeof(AboditNLP.Verb.Tense.Present), typeof(AboditNLP.Verb.Type.Transitive))
                 // If you need to override an irregular verb, or add an interface to a specific tense you can do that
-                .Past("reported", typeof(Verb.reported))
-                // Verbs can have associated Noun forms, Adverb forms and Adjective forms, e.g. when you report something the thing is a 'report'
-                .Noun("report", typeof(Noun.report)));
+                .Past("reported", typeof(Verb.reported)));
 
             store.Store(Lexeme.New.Verb("debug", typeof(Verb.debug), typeof(AboditNLP.Verb.Tense.Present)));
         }

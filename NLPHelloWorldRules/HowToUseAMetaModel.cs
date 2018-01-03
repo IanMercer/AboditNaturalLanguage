@@ -60,8 +60,6 @@ namespace NLPHelloWorldRules
                     var sort = visitor.Visit(completeQuery.Sort.SortExpression);
                     st.Say($"Sort order for this would be {sort}");
                 }
-
-                st.Say("You can use these to create a parameterized SQL query");
             }
 
             return NLPActionResult.None;

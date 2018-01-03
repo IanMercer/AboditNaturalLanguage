@@ -2,7 +2,7 @@
 
 namespace NLPHelloWorldRules
 {
-    public interface IIntent : IIntentDebugging, IIntentWordnet, IIntentSuggestions
+    public interface IIntent : IIntentDebugging, IIntentWordnet, IIntentSuggestions, IIntentTemporal
     {
     }
 

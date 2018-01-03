@@ -29,6 +29,8 @@ namespace NLPHelloWorldRules
             ,typeof(AboditNLP.Noun.Type.Singular)
             ,typeof(AboditNLP.Noun.Type.Plural)
             ,typeof(IAdverb)
+            ,typeof(IPreposition)
+            ,typeof(IOperator)
             ,typeof(AboditNLP.Verb.Tense.Present)
             ,typeof(AboditNLP.Verb.Tense.Past)
             ,typeof(AboditNLP.Verb.Tense.PresentSelf)
@@ -45,10 +47,6 @@ namespace NLPHelloWorldRules
 
         public void GrammarDump(IListener st, ITokenText token)
         {
-            IVerb verb = token as IVerb;
-            INoun noun = token as INoun;
-            IAdjective adjective = token as IAdjective;
-
             if (token.Synset != null && token.Synset != SynSet.Empty)
             {
                 string definition = nlp.GetDefinition(token);
@@ -57,7 +55,7 @@ namespace NLPHelloWorldRules
                     st.Say(definition);
                 }
 
-                // Token is not a Lexeme, it's an Imporomptu proxy acting like all interfaces are present
+                // Token is not a Lexeme, it's an Impromptu proxy acting like all interfaces are present
                 var ints = token.GetType().GetInterfaces();
 
                 var edges = SynSet.Graph.Follow(token.Synset, null);
@@ -71,7 +69,7 @@ namespace NLPHelloWorldRules
 
                 if (synonyms.Any())
                 {
-                    st.Say("Synonyms " + string.Join(", ", synonyms));
+                    st.Say("  Synonyms " + string.Join(", ", synonyms));
                 }
 
                 // Dump the relations of this Lexeme
@@ -84,9 +82,9 @@ namespace NLPHelloWorldRules
                 }
             }
 
-            if (verb != null)
+            if (token is IVerb verb)
             {
-                st.Say("Present self : I " + verb.PresentSelf.Text +
+                st.Say("  Present self : I " + verb.PresentSelf.Text +
                 ", Present third person: He " + verb.PresentThirdPerson.Text +
                 ", Present plural: We " + verb.PresentPlural.Text +
                 ", Present participle: " + verb.PresentParticiple.Text +
@@ -95,29 +93,54 @@ namespace NLPHelloWorldRules
                 ", Past plural: We " + verb.PastPlural.Text +
                 ", Infinitive: To " + verb.Infinitive.Text);
             }
-            else if (noun != null)
+            else if (token is INoun noun)
             {
                 if (noun is Countable)
                 {
-                    st.Say("Noun singular " + ((Countable)noun).Singular.Text +
+                    st.Say("  Noun singular " + ((Countable)noun).Singular.Text +
                     ", plural " + ((Countable)noun).Plural.Text);
                 }
                 else if (noun is Uncountable)
                 {
-                    st.Say("Uncountable noun " + ((Uncountable)noun).Singular.Text);
+                    st.Say("  Uncountable noun " + ((Uncountable)noun).Singular.Text);
                 }
             }
-            else if (adjective != null)
+            else if (token is IAdjective adjective)
             {
-                st.Say("Adjective " + adjective.Normal.Text +
+                st.Say("  Adjective " + adjective.Normal.Text +
                     (adjective.Comparative == null ? "" : ",  Comparative " + adjective.Comparative.Text) +
                     (adjective.Comparative == null ? "" : ",  Superlative " + adjective.Superlative.Text));
             }
+            else if (token is IAdverb adverb)
+            {
+                st.Say("  Adverb " + adverb.Text);
+            }
+            else if (token is IPreposition preposition)
+            {
+                st.Say("  Preposition " + preposition.Text);
+            }
+            else if (token is IConjunction conjunction)
+            {
+                st.Say("  Conjunction " + conjunction.Text);
+            }
+            else if (token is IOperator @operator)
+            {
+                st.Say("  Operator " + @operator.Text);
+            }
             else
             {
-                st.Say("Some other form of word " + token.Text);
+                st.Say("  Some other form of word " + token.Text);
             }
-            st.Say(string.Join(", ", token.GetType().GetInterfaces().Select(x => x.Name).Except(new[] { "IActLikeProxyInitialize", "IActLikeProxy", "ISerializable" })));
+
+            var interestingInterfaces = token.GetType().GetInterfaces()
+                .Select(x => x.Name)
+                .Except(new[] { "IActLikeProxyInitialize", "IActLikeProxy", "ISerializable", "ITokenText", "IToken" })
+                .ToList();
+
+            if (interestingInterfaces.Any())
+            {
+                st.Say("  Interfaces: " + string.Join(", ", interestingInterfaces));
+            }
         }
 
         public void GrammarDump(IListener st, IAmbiguous<ITokenText> tokenAmbiguous)

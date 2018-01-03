@@ -1,6 +1,0 @@
-syntax: glob
-NLPHelloWorld.suo
-NLPHelloWorld/bin/Debug/*
-**/obj/x86/Debug/*
-**/bin/Debug/*
-packages/**/*.*
