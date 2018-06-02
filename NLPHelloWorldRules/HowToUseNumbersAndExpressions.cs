@@ -42,6 +42,11 @@ namespace NLPHelloWorldRules
             else
             {
                 st.Say($"You entered an expression {tne.Describe(true)}");
+                st.Say($"You can serialize a token expression {tne.Serialize()}");
+                st.Say($"You can get the unbound variables on it {tne.UnboundVariables}");
+                st.Say($"To create variables, add a TokenExpressionVariableAcces to the Lexeme store using the words you want.");
+                st.Say($"You can evaluate a TokenExpression in the context of an environment containing variable values.");
+                st.Say($"You can also convert it to a LINQ Expression or to a SQL Query.");
             }
             return NLPActionResult.None;
         }
