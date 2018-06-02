@@ -26,6 +26,7 @@ namespace NLPHelloWorldRules
             if (ts is TemporalSetUnknown) { st.Say("Please be specific about the time range you want to use."); return; }
 
             st.Say("You entered: " + ts.Describe(true));
+            st.Say("This serializes to " + ts.Serialize());
 
             if (ts is IInfinite tsinfinite)
             {
@@ -41,7 +42,6 @@ namespace NLPHelloWorldRules
 
             if (ts is IFinite tsfinite)
             {
-                st.Say("You entered " + tsfinite.Describe(true));
                 st.Say("That's a finite set so you can enumerate all of the time periods in it.");
             }
 
@@ -61,11 +61,11 @@ namespace NLPHelloWorldRules
 
             st.Say("");
 
-#if COMING_SOON
             st.Say("You can also convert it to a LINQ to object query expression");
 
-            // The conversion visitor in this case needs a Getter which could be one of the predefined ones (using Reflection or using a DataRow)
-            // or some other getter that you define. In this case we want to query against an in-memory object using reflection to get to the
+            // The conversion visitor in this case needs a Getter which could be one of the predefined ones 
+            // (using Reflection or using a DataRow) or some other getter that you define. 
+            // In this case we want to query against an in-memory object using reflection to get to the
             // required field "DateSold".
             var expressionVisitor = new ConvertToExpressionVisitor<ProductClass>(ConvertToExpressionVisitor<ProductClass>.GetterForObjectUsingReflection);
 
@@ -73,7 +73,6 @@ namespace NLPHelloWorldRules
             var expressionQuery = expressionVisitor.Visit(queryExpression);
 
             st.Say("As a LINQ to objects query this would be: " + expressionQuery.ToString());
-#endif
         }
 
         private static void DumpEnumerationLimited(IListener st, IEnumerable<CalendarDateTimeRange> sequence, int limit)

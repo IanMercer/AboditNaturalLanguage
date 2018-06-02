@@ -19,11 +19,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AboditNLP" Version="3.6.2.8" />
-    <PackageReference Include="AboditNLPDictionary" Version="3.6.2.8" />
-    <PackageReference Include="AboditNLPWordnet" Version="3.6.2.8" />
-    <PackageReference Include="AboditNLPWordnetExtended" Version="3.6.2.8" />
-    <PackageReference Include="Autofac.Extras.AboditNLP" Version="3.6.2.8" />
+    <PackageReference Include="AboditNLP" Version="3.6.77.6" />
+    <PackageReference Include="AboditNLPDictionary" Version="3.6.77.6" />
+    <PackageReference Include="AboditNLPWordnet" Version="3.6.77.6" />
+    <PackageReference Include="AboditNLPWordnetExtended" Version="3.6.77.6" />
+    <PackageReference Include="Autofac.Extras.AboditNLP" Version="3.6.77.6" />
     <PackageReference Include="log4net" Version="2.0.8" />
     <ProjectReference Include="..\NLPHelloWorldRules\NLPHelloWorldRules.csproj" />
     <Reference Include="Microsoft.CSharp" />

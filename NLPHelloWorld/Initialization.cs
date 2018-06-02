@@ -1,8 +1,8 @@
 ﻿using AboditNLP;
+using AboditNLP.IoC.Autofac;
 using Autofac;
 using NLPHelloWorldRules;
 using System;
-using AboditNLP.Noun;
 
 namespace NLPHelloWorld
 {
@@ -40,33 +40,19 @@ namespace NLPHelloWorld
             // the interface INLPPart is provided to make this convenient (and future proof)
 
             // The NLP assembly contains many Production Rules and some TokenFactories that need to be registered
-            builder.RegisterAssemblyTypes(typeof(NLP).Assembly)
-                .Where(t => t.IsAssignableTo<INLPPart>())
-                .AsImplementedInterfaces();
+            builder.RegisterAllNlpParts(typeof(NLP).Assembly);
 
             // Assembly containing your rules
-            builder.RegisterAssemblyTypes(typeof (SampleRules).Assembly)
-                .Where(t => t.IsAssignableTo<INLPPart>()).AsImplementedInterfaces();
+            builder.RegisterAllNlpParts(typeof(SampleRules).Assembly);
 
-            // Assemblies containing Wordnet
-            builder.RegisterAssemblyTypes(typeof(WordnetCore).Assembly)
-                .Where(t => t.IsAssignableTo<INLPPart>()).AsImplementedInterfaces();
-
-            builder.RegisterAssemblyTypes(typeof(WordnetExtended).Assembly)
-                .Where(t => t.IsAssignableTo<INLPPart>()).AsImplementedInterfaces();
-
-            // Indicate all the Assemblies that can be used by NLP for resolution of 
-            // types produced by rules or in token factories.
-            builder.RegisterInstance(typeof(NLP).Assembly);                            // NLP
-            builder.RegisterInstance(typeof(SampleRules).Assembly);                    // NLP Dictionary
-            // Always include Abodit Units as it contains all of the Temporal classes
-            builder.RegisterInstance(typeof(Abodit.Units.Distance).Assembly);          // AboditUnits
             // Include Wordnet it you are using it
-            builder.RegisterInstance(typeof(WordnetCore).Assembly);                  // NLP Wordnet
-            builder.RegisterInstance(typeof(WordnetExtended).Assembly);                 // NLP Wordnet-Extended
+            builder.RegisterAllNlpParts(typeof(WordnetCore).Assembly);
+
+            // And if you want less common words too ...
+            builder.RegisterAllNlpParts(typeof(WordnetExtended).Assembly);
 
             // Register any classes that contain the actual code to run when a sentence
-            // is recognized. So called "Intent" classes.
+            // is recognized. So-called "Intent" classes.
             builder.RegisterAssemblyTypes(typeof(SampleRules).Assembly)
                 .Where(t => t.IsAssignableTo<IIntent>())
                 .AsImplementedInterfaces();
