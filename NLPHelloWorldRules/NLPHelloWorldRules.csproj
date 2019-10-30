@@ -12,9 +12,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AboditNLP" Version="3.6.77.6" />
-    <PackageReference Include="AboditNLPDictionary" Version="3.6.77.6" />
-    <PackageReference Include="AboditNLPWordnet" Version="3.6.77.6" />
+    <PackageReference Include="AboditNLP" Version="3.7.303.1" />
+    <PackageReference Include="AboditNLPDictionary" Version="3.7.303.1" />
+    <PackageReference Include="AboditNLPWordnet" Version="3.7.303.1" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />

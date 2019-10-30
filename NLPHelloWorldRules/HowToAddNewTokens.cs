@@ -9,22 +9,22 @@ namespace HelloWorld
     /// <summary>
     /// This sample TokenFactory parses strings of the form '#' followed by a sequence of digits.
     /// You might have a similar Token for recognizing ISBN numbers, UPC codes, ...
-    /// 
+    ///
     /// A token class can do database look ups too, but if you do, mark it as 'slow'.
-    /// 
+    ///
     /// TokenFactories are useful for words that change over time such as names in a database, or for text that is
     /// best parsed using a RegEx or other method.
-    /// 
+    ///
     /// Static text like words in the dictionary is best stored using Lexemes (see How to Define Words).
-    /// 
+    ///
     /// You can split the Token class from the TokenFactory class or you can combine them as in this example.
-    /// 
+    ///
     /// TokenFactories can take part in DependencyInjection (e.g. you could inject a Database service into a
     /// TokenFactory that needs a database lookup.
-    /// 
+    ///
     /// TokenFactories can also be added at 'Execute' time by passing them in as additional objects to the Execute
     /// method. This enables scenarios like a per-user dictionary of 'friends'.
-    /// 
+    ///
     /// </summary>
 
     public class ParsedToken : Token
@@ -58,9 +58,9 @@ namespace HelloWorld
     /// <summary>
     /// Sample Tokenfactory
     /// </summary>
-    public class ParsedTokenFactory: ITokenFactory
-    { 
-        public IEnumerable<TokenResult> Parse(NLPOptions options, int start, string input, params AllowedToken[] types)
+    public class ParsedTokenFactory : ITokenFactory
+    {
+        public IEnumerable<TokenResult> Parse(ILogger log, NLPOptions options, int start, string input, params AllowedToken[] types)
         {
             int i = start;
 
@@ -96,7 +96,7 @@ namespace HelloWorld
 
             // Finally yield return each match that you have - there may be more than one
 
-            yield return new TokenResult(token, input, start, i, Sensitivity.Default);
+            yield return new TokenResult(token, input, start, i, Sensitivity.Default, quality: 1, probability: 1);
         }
     }
 }

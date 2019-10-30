@@ -5,6 +5,7 @@ namespace NLPHelloWorldRules
     public interface IIntentDebugging
     {
         void DebugOn(IListener st);
+
         void DebugOff(IListener st);
     }
 
@@ -16,14 +17,12 @@ namespace NLPHelloWorldRules
         public void DebugOn(IListener st)
         {
             NLP.Debugging = true;
-            //NLP.DebuggingDetail = true;
             st.Say("Debugging now on");
         }
 
         public void DebugOff(IListener st)
         {
             NLP.Debugging = false;
-            NLP.DebuggingDetail = false;
             st.Say("Debugging now off");
         }
     }

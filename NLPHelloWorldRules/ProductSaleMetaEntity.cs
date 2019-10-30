@@ -19,7 +19,7 @@ namespace NLPHelloWorldRules
     /// If you aren't using the Get method on a metaentity it doesn't matter too much
     /// what the backing type is.
     /// </remarks>
-    public class ProductSaleMetaEntity : MetaEntity<MetaEntityId, DataRow>, ILexemeGenerator, IMetaEntity
+    public class ProductSaleMetaEntity : MetaEntity<DataRow>, ILexemeGenerator, IMetaEntity
     {
         public void CreateWords(ILexemeStore store)
         {
@@ -68,21 +68,21 @@ namespace NLPHelloWorldRules
         public readonly IField VolumeField;
         public readonly IField AreaField;
 
-        public ProductSaleMetaEntity() : base(new MetaEntityId { Id = 1 }, "product", "products",
+        public ProductSaleMetaEntity() : base(Guid.NewGuid(), "product", "products",
             new[]
             {
                 new MetaSynset("merchandise-noun-1", "product"),
                 new MetaSynset("SKU-noun-1", "SKU")
             })
         {
-            this.DateSoldField = new FieldDate(this, "DateSold",
-                DateTimeQuantity.OneEarthDay,
+            this.DateSoldField = new FieldDate("DateSold", this, "DateSold",
+                typeof(DateTime),
                 new[] { new MetaSynset("sell-verb-1", "sold") },   // verb "sold"
-                Qualifier.None, null);
+                Qualifier.None, null, null);
 
             // Age is (NOW - date in database)
             this.AgeOfDateSoldField =
-                 new FieldNumeric(
+                 new FieldNumeric("Age",
                      this,
                      // Age is (NOW - date in database)
                      new TokenExpressionPropertyAccess(
@@ -95,10 +95,11 @@ namespace NLPHelloWorldRules
                          "Years"),
                      TimePeriod.UnitOneYear, new[] { new MetaSynset("age-verb-1", "age"), new MetaSynset("age-noun-1", "age") },
                      Qualifier.None,
-                     null, // TODO: AGE FORMATTER?? 
+                     null,
+                     null, // TODO: AGE FORMATTER??
                      FieldQualifier.Normal);     // TODO: Show readonly field?
 
-            this.NameField = new FieldText(
+            this.NameField = new FieldText("Name",
                 this,
                 "Name",
                 new[]
@@ -108,7 +109,7 @@ namespace NLPHelloWorldRules
                 }
             );
 
-            this.ColorField = new FieldText(this,
+            this.ColorField = new FieldText("Color", this,
                 "PColor",
                 new[]
                 {
@@ -116,40 +117,45 @@ namespace NLPHelloWorldRules
                 new MetaSynset("color-verb-1", "color")     // colored
                 });
 
+            this.UnitPriceField = new FieldNumeric("Unit price", this,
+                "PUnitPrice",
+                typeof(decimal),
+                CurrencySymbol.GBP, new[]
+                {
+                            new MetaSynset("unit_price-noun-1", "unit price")
+                },
+                Qualifier.None,
+                null,
+                null,
+                FieldQualifier.Important);
 
-
-            this.UnitPriceField = new FieldNumeric(this,
-    "PUnitPrice",
-    CurrencySymbol.GBP, new[]
-    {
-                new MetaSynset("unit_price-noun-1", "unit price")
-    },
-    Qualifier.None,
-    null,
-    FieldQualifier.Important);
-
-            this.LengthField = new FieldNumeric(this,
+            this.LengthField = new FieldNumeric("Length", this,
                 "PLength",
+                typeof(decimal),
                 Distance.OneCentimeter, new[]
                 {
                 new MetaSynset("length-noun-1", "length")
                 },
                 new[] { Qualifier.Length },
                 null,
+                null,
                 FieldQualifier.Important);
 
-            this.WidthField = new FieldNumeric(this,
+            this.WidthField = new FieldNumeric("Width", this,
                 "PWidth",
+                typeof(decimal),
                 Distance.OneCentimeter, new[]
                 {
                 new MetaSynset("width-noun-1", "width")
                 },
                 new[] { Qualifier.Width },  // Width is in a specific direction
                 null,
+                null,
                 FieldQualifier.Important);
 
-            this.HeightField = new FieldNumeric(this,
+            this.HeightField = new FieldNumeric("Height", this,
                 "PHeight",
+                typeof(decimal),
                 // Height field is in millimeters to make comparisons more interesting
                 Distance.OneMillimeter,
                 new[]
@@ -158,10 +164,12 @@ namespace NLPHelloWorldRules
                 },
                 new[] { Qualifier.Height },
                 null,
+                null,
                 FieldQualifier.Important);
 
-            this.WeightField = new FieldNumeric(this,
+            this.WeightField = new FieldNumeric("Weight", this,
                 "PWeight",
+                typeof(decimal),
                 Weight.OneGramme, new[]
                 {
                 new MetaSynset("weight-noun-1", "weight", "mass"),
@@ -170,26 +178,29 @@ namespace NLPHelloWorldRules
                 },
                 Qualifier.None,
                 null,
+                null,
                 FieldQualifier.Important);
 
-            this.PriceField = new FieldNumeric(this,
+            this.PriceField = new FieldNumeric("Price", this,
                 "PPrice",
+                typeof(decimal),
                 CurrencySymbol.USD,
                 new[] { new MetaSynset("price-noun-2", "price"), new MetaSynset("price-verb-1", "price") },
-                Qualifier.None, null, FieldQualifier.Important);
+                Qualifier.None, null, null, FieldQualifier.Important);
 
-
-            this.CostField = new FieldNumeric(this,
-                    new TokenExpressionVariableAccess("PCost", typeof(Currency)),
+            this.CostField = new FieldNumeric("Cost", this,
+                // You can pass a calculated Expression not just a field name
+                new TokenExpressionVariableAccess("PCost", typeof(Currency)),
                 CurrencySymbol.GBP, new[]
                 {
                 new MetaSynset("cost-noun-1", "cost")
                 },
                 Qualifier.None,
-                null,
+                null, null,
                 FieldQualifier.Important);
 
-            this.ProfitField = new FieldNumeric(this,
+            this.ProfitField = new FieldNumeric("Profit", this,
+                // You can pass a calculated Expression not just a field name
                 new TokenExpressionSubtract(new TokenExpressionVariableAccess("PPrice", typeof(Currency)),
                     new TokenExpressionVariableAccess("PCost", typeof(Currency))),
                 CurrencySymbol.GBP, new[]
@@ -197,56 +208,60 @@ namespace NLPHelloWorldRules
                 new MetaSynset("profit-noun-1", "profit")
                 },
                 Qualifier.None,
-                null,
+                null, null,
                 FieldQualifier.Important);
 
-            this.RadiusField = new FieldNumeric(this,
-                "PRadius", Distance.OneMeter,
+            this.RadiusField = new FieldNumeric("Radius", this,
+                "PRadius",
+                typeof(decimal), Distance.OneMeter,
                  new[] { new MetaSynset("radius-noun-1", "radius") },
-                 new[] { Qualifier.Length }, null, FieldQualifier.Important);
+                 new[] { Qualifier.Length }, null, null, FieldQualifier.Important);
 
             this.DiameterField = new FieldNumeric(
+                "Diameter",
                 this,
                 new TokenExpressionMultiply(
                         new TokenExpressionVariableAccess("PRadius"),
                         TokenExpressionConstant.Create(2)),
                 Distance.OneMeter,
                  new[] { new MetaSynset("diameter-noun-1", "diameter") },
-                 new[] { Qualifier.Length }, null, FieldQualifier.Important);
+                 new[] { Qualifier.Length }, null, null, FieldQualifier.Important);
 
             // monster products have a radius over 27
-            this.Monster = new FieldBooleanExpression(
+            this.Monster = new FieldBooleanExpression("Monster",
                 this,
                 new TokenExpressionGreater(
                     new TokenExpressionVariableAccess("PRadius"),
                     TokenExpressionConstant.Create(27)),
                 new[] { new MetaSynset("monster-adjective-1", "monster") },
-                null, FieldQualifier.Important);
+                null, null, FieldQualifier.Important);
 
             // Synonyn for HeightField, TODO: Allow multiple descriptions of each field in the constructor
-            this.DepthField = new FieldNumeric(this,
+            this.DepthField = new FieldNumeric("Height", this,
                 "PHeight",
+                typeof(double),
                 Distance.OneMeter,
                 new[] { new MetaSynset("depth-noun-1", "depth") },
-                new[] { Qualifier.Depth, }, null, FieldQualifier.Important);
+                new[] { Qualifier.Depth, }, null, null, FieldQualifier.Important);
 
             // Distance in km (another type of 'length' field)
 
-            this.DistanceField = new FieldNumeric(this,
+            this.DistanceField = new FieldNumeric("Distance", this,
                 new TokenExpressionVariableAccess("PDistance", typeof(double)),
                 Distance.OneKiloMeter,
                 new[] { new MetaSynset("distance-noun-1", "distance") },
-                new[] { Qualifier.Driven, }, null, FieldQualifier.Important
+                new[] { Qualifier.Driven, }, null, null, FieldQualifier.Important
             );
 
-            this.OpenField = new FieldEnumBool(this,
+            this.OpenField = new FieldEnumBool("Open", this,
                 "Open",
                 new EnumValue<bool>("open", true, new MetaSynset("open-adjective-1", "open")),
                 new EnumValue<bool>("closed", false, new MetaSynset("closed-adjective-1", "closed")),
+                null,
                 new BoolFormatter("open", "closed")
             );
 
-            this.NewOrUsedField = new FieldEnum(this, "NewOrUsed",
+            this.NewOrUsedField = new FieldEnum("New or used", this, "NewOrUsed",
                 new[]
                 {
                 new EnumValue<string>("new value", "new", new MetaSynset("new-adjective-1", "new", "unused")),
@@ -254,43 +269,47 @@ namespace NLPHelloWorldRules
                     new MetaSynset("secondhand-adjectivesatellite-2", "secondhand", "second hand", "used"))
                 },
                 typeof(string),
-                null
+                null, null
             );
 
-            this.AverageTemperatureField = new FieldNumeric(this,
+            this.AverageTemperatureField = new FieldNumeric("Average temperature", this,
                 "AveTemp",
+                typeof(double),
                 Temperature.OneCelcius,
                 new[] { new MetaSynset("average_temperature-noun-1", "average temperature") },
                 Qualifier.None,
-                null,
+                null, null,
                 FieldQualifier.Average);
 
-            this.MaximumTemperatureField = new FieldNumeric(this,
+            this.MaximumTemperatureField = new FieldNumeric("Maximum temperature", this,
                 "MaxTemp",
+                typeof(double),
                 Temperature.OneCelcius,
                 new[] { new MetaSynset("maximum_temperature-noun-1", "maximum temperature") },
                 Qualifier.None,
-                null,
+                null, null,
                 FieldQualifier.Maximum);
 
-            this.MinimumTemperatureField = new FieldNumeric(this,
+            this.MinimumTemperatureField = new FieldNumeric("Minimum temperature", this,
                 "MinTemp",
+                typeof(double),
                 Temperature.OneCelcius,
                 new[] { new MetaSynset("minimum_temperature-noun-1", "minimum temperature") },
                 Qualifier.None,
-                null,
-                FieldQualifier.Maximum);
+                null, null,
+                FieldQualifier.Minimum);
 
-            this.DurationField = new FieldNumeric(this,
+            this.DurationField = new FieldNumeric("Duration", this,
                 "PDuration",
+                typeof(double),
                 TimePeriod.UnitOneSecond,
                 new[] { new MetaSynset("duration-noun-1", "length", "duration", "elapsed time", "time taken") },
                 Qualifier.None,
-                null, FieldQualifier.Important);
+                null, null, FieldQualifier.Important);
 
             // Computed field, not in database
 
-            this.VolumeField = new FieldNumeric(this,
+            this.VolumeField = new FieldNumeric("Volume", this,
                 new TokenExpressionMultiply(
                     new TokenExpressionVariableAccess("PWidth"),
                     new TokenExpressionVariableAccess("PLength"),
@@ -299,9 +318,9 @@ namespace NLPHelloWorldRules
                 Volume.OneMeterCubed,
                 new[] { new MetaSynset("volume-noun-1", "volume", "size", "capacity") },
                 Qualifier.None,
-                null);
+                null, null);
 
-            this.AreaField = new FieldNumeric(this,
+            this.AreaField = new FieldNumeric("Area", this,
                 new TokenExpressionMultiply(
                     new TokenExpressionVariableAccess("PWidth"),
                     new TokenExpressionVariableAccess("PLength")
@@ -309,10 +328,10 @@ namespace NLPHelloWorldRules
                 Area.OneMeterSquared,
                 new[] { new MetaSynset("area-noun-1", "area") },
                 Qualifier.None,
-                null);
+                null, null);
         }
 
-    public override bool Equals(IMeta other)
+        public override bool Equals(IMeta other)
         {
             return Object.ReferenceEquals(this, other);
         }
@@ -327,5 +346,4 @@ namespace NLPHelloWorldRules
     {
         public int Id { get; set; }
     }
-
 }

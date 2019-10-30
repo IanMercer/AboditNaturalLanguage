@@ -6,7 +6,7 @@ using System;
 
 namespace NLPHelloWorld
 {
-    class Initialization
+    internal class Initialization
     {
         public static INLP NLPInstance => nlpInstance.Value;
 
@@ -17,12 +17,14 @@ namespace NLPHelloWorld
             // IMPORTANT: Must set the resolver for NLP
             NLP.SetResolver(new AboditNLP.IoC.Autofac.AutofacResolver(container));
 
-            // Add a logger if you want one
-            NLP.SetLogger(new LogFacade());
+            // Create a logger that maps NLP ILogger to log4net
+            var logger = new LogFacade();
 
             // Resolve the NLP engine and all of its dependencies (TokenFactories, ...)
-            var nlp = container.Resolve<INLP>();        
-            nlp.InitializeAsync();
+            var nlp = container.Resolve<INLP>();
+
+            // Start initializing it, but don't wait here
+            nlp.InitializeAsync(logger).ConfigureAwait(false);
             return nlp;
         });
 

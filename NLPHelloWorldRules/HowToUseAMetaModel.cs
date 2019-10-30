@@ -18,20 +18,20 @@ namespace NLPHelloWorldRules
         /// complex queries against that data from english language input including
         /// various ways to specify the sort order, to filter on various fields, to use
         /// SQL functions like UPPER, DATEPART, ...
-        /// 
+        ///
         /// For DateTime fields the capabilities are particularly advanced in that you can use
         /// complex datatime queries like 'last year on a friday in May after 5pm' and it can
         /// build the SQL query for that.
         /// </remarks>
         [Priority(1000)]
-        public NLPActionResult CompleteQuery(CompleteQuery completeQuery)
+        public NLPActionResult CompleteQuery(MetaQuery metaQuery)
         {
             st.Say("You entered a query against an entity");
-            st.Say($" {completeQuery}");
+            st.Say($" {metaQuery}");
 
-            if (completeQuery.Filter == TokenExpression.True)
+            if (metaQuery.Filter == TokenExpression.True)
             {
-                var entity = completeQuery.MetaEntity;
+                var entity = metaQuery.MetaEntity;
 
                 st.Say("You entered a word or phrase that matches an entity (table) name " + entity.Name);
                 st.Say("You can also enter phrases that match fields (or calculated values) for that entity");
@@ -51,14 +51,17 @@ namespace NLPHelloWorldRules
                 st.Say("You can convert this query to SQL or other database query languages");
 
                 var visitor = new Abodit.Expressions.Visitor.Sql.ConvertToSqlStringVisitor<DataTable>();
-                var filter = visitor.Visit(completeQuery.Filter);
+                var filter = visitor.Visit(metaQuery.Filter);
 
                 st.Say($"Filter for this would be {filter}");
 
-                if (completeQuery.Sort != null)
+                if (metaQuery.Sorts.Any())
                 {
-                    var sort = visitor.Visit(completeQuery.Sort.SortExpression);
-                    st.Say($"Sort order for this would be {sort}");
+                    var sorts = metaQuery.SortsWithMetaEntitySorts.Select(sort =>
+                        visitor.Visit(sort.SortExpression))
+                        .ToList();
+
+                    st.Say($"Sort order for this would be {string.Join(",", sorts)}");
                 }
             }
 

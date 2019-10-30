@@ -7,9 +7,9 @@ using NLPHelloWorldRules;
 
 namespace NLPHelloWorld
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             string location = AppDomain.CurrentDomain.BaseDirectory;
             Console.WriteLine("Starting in " + location);
@@ -47,7 +47,7 @@ namespace NLPHelloWorld
             // objects.
 
             // A history object allowed rules to look back on a conversation to find things of a given
-            // type (interface) in order to respond to apply responses to questions, clatifications, ... 
+            // type (interface) in order to respond to apply responses to questions, clatifications, ...
 
             var rh = new RememberedHistory();
 
@@ -57,7 +57,7 @@ namespace NLPHelloWorld
             // for rules to continue executing even after the call to nlp.Execute() has completed, you
             // should use this approach for any chat-like connections. Rules can thus fire off tasks that
             // keep running and provide messages back to the user about progress on a long task, or updates
-            // when something changes. 
+            // when something changes.
 
             var collector = new ConsoleCollector(rh);
 
@@ -69,7 +69,10 @@ namespace NLPHelloWorld
             // Use the async call so loading tokens and rules happens in the background
             // and the UI isn't blocked.
 
-            nlp.InitializeAsync().ContinueWith((t) =>
+            // Create a logger for NLP (calls through to log4net in this case)
+            var logger = new LogFacade();
+
+            nlp.InitializeAsync(logger).ContinueWith((t) =>
             {
                 collector.Say("OK, I'm ready now");
                 collector.Say("Hello");
@@ -89,7 +92,6 @@ namespace NLPHelloWorld
 
             // Turn off all debugging
             NLP.Debugging = false;
-            NLP.DebuggingDetail = false;
 
             var conversationSequence = extraState.ConversationSequence().GetEnumerator();
 
