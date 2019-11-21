@@ -5,7 +5,7 @@ using System;
 namespace NLPHelloWorld
 {
     /// <summary>
-    /// LogFacade maps from AboditNLP's logging interface to log4net
+    /// LogFacade maps from AboditNLP's logging interface to log4net or whatever logger you want to use
     /// </summary>
     /// <remarks>
     /// Use this class if you are using log4net and want logging from AboditNLP
