@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: "abodit-6b58"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: "abodit-6b58"
+  template:
+    metadata:
+      labels:
+        app: "abodit-6b58"
+    spec:
+      containers:
+        - name: "abodit-6b58"
+          image: "abodit.azurecr.io/abodit"
+          ports:
+          - containerPort: 80
