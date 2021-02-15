@@ -1,65 +1,51 @@
-﻿using Abodit;
-using log4net;
+﻿using AboditNLP;
+using Microsoft.Extensions.Logging;
 using System;
 
 namespace NLPHelloWorld
 {
     /// <summary>
-    /// LogFacade maps from AboditNLP's logging interface to log4net or whatever logger you want to use
-    /// </summary>
-    /// <remarks>
-    /// Use this class if you are using log4net and want logging from AboditNLP
-    /// or create your own inheriting from ILogger to map Abodit NLP's calls to
-    /// log to whatever logging framework you have chosen.
-    ///
-    /// The ILogger interface keeps AboditNLP independent of logging framework.
+    /// Simple console logger for demonstration implementing the Microsoft abstraction
+    /// Use SeriLog or similar in your application.
     /// </remarks>
-    internal class LogFacade : ILogger
+    internal class ConsoleLogger : ILogger, ILogger<NLP>
     {
-        private static readonly ILog log = LogManager.GetLogger("NLP");
-
-        public bool IsTraceEnabled { get; set; } = false;
-        public bool IsDebugEnabled { get; set; } = false;
-        public bool IsInfoEnabled { get; set; } = true;
-
-        public void Debug(string message)
+        private class DisposableScope : IDisposable
         {
-            log.Debug(message);
+            private bool disposedValue;
+
+            protected virtual void Dispose(bool disposing)
+            {
+                if (!disposedValue)
+                {
+                    if (disposing)
+                    {
+                        // TODO: dispose managed state (managed objects)
+                    }
+                    disposedValue = true;
+                }
+            }
+
+            public void Dispose()
+            {
+                Dispose(disposing: true);
+                GC.SuppressFinalize(this);
+            }
         }
 
-        public void Error(string message, Exception ex)
+        public IDisposable BeginScope<TState>(TState state)
         {
-            log.Error(message, ex);
+            return new DisposableScope();
         }
 
-        public void Error(string message)
+        public bool IsEnabled(LogLevel logLevel)
         {
-            throw new NotImplementedException();
+            return logLevel >= LogLevel.Information;
         }
 
-        public void Fatal(string message)
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
-            log.Fatal(message);
-        }
-
-        public void Info(string message)
-        {
-            log.Info(message);
-        }
-
-        public ILogger Sub(string key)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Trace(string message)
-        {
-            log.Debug(message);
-        }
-
-        public void Warn(string message)
-        {
-            log.Warn(message);
+            Console.WriteLine(formatter(state, exception));
         }
     }
 }

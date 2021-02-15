@@ -11,9 +11,13 @@ namespace NLPHelloWorldRules
     public interface IIntentWordnet
     {
         void GrammarDump(IListener st, ITokenText token);
+
         void GrammarDump(IListener st, IAmbiguous<ITokenText> tokenAmbiguous);
+
         void RecognizeMammals(IListener st, Mammal1 mammal);
+
         void AnswerIsXaY(IListener st, IAmbiguous<INoun> nounAmbiguous, IAmbiguous<INoun> classAmbiguous);
+
         void AnswerIsXaY(IListener st, INoun noun, INoun @class);
     }
 
@@ -22,7 +26,7 @@ namespace NLPHelloWorldRules
 
     public partial class Intent : IIntentWordnet
     {
-        readonly Type[] wordFormTypes = new[] { typeof(IAdjective)
+        private readonly Type[] wordFormTypes = new[] { typeof(IAdjective)
             ,typeof(AboditNLP.Adjective.Type.Normal)
             ,typeof(AboditNLP.Adjective.Type.Comparative)
             ,typeof(AboditNLP.Adjective.Type.Superlative)
@@ -58,7 +62,7 @@ namespace NLPHelloWorldRules
                 // Token is not a Lexeme, it's an Impromptu proxy acting like all interfaces are present
                 var ints = token.GetType().GetInterfaces();
 
-                var edges = SynSet.Graph.Follow(token.Synset, null);
+                var edges = SynSet.Graph.Follow(token.Synset, (Relation)null);
 
                 var synonyms = edges.Where(e => e.Predicate == Relation.WordFor).Select(e => e.End)
                     .OfType<Lexeme>()
@@ -265,7 +269,6 @@ namespace NLPHelloWorldRules
             }
         }
 
-
         private class FoundConnection
         {
             public string Text { get; set; }
@@ -303,14 +306,14 @@ namespace NLPHelloWorldRules
         /// </summary>
         private IEnumerable<SynSet> FindCommonAncestors(IAmbiguous<INoun> nounAmbiguous, IAmbiguous<INoun> classAmbiguous)
         {
-            Graph<SynSet,Relation> classSuccessors = null;
+            Abodit.Mutable.Graph<SynSet, Relation> classSuccessors = null;
             foreach (var @class in classAmbiguous)
             {
                 var successorsForOne = SynSet.Graph.Successors<SynSet>(@class.Synset, Relation.RDFSType);
                 classSuccessors = classSuccessors?.Union(successorsForOne) ?? successorsForOne;
             }
 
-            Graph<SynSet,Relation> nounSuccessors = null;
+            Abodit.Mutable.Graph<SynSet, Relation> nounSuccessors = null;
             foreach (var noun in nounAmbiguous)
             {
                 var edgeSuccessors = SynSet.Graph.Successors<SynSet>(noun.Synset, Relation.RDFSType);

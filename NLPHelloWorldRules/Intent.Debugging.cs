@@ -16,13 +16,11 @@ namespace NLPHelloWorldRules
     {
         public void DebugOn(IListener st)
         {
-            NLP.Debugging = true;
             st.Say("Debugging now on");
         }
 
         public void DebugOff(IListener st)
         {
-            NLP.Debugging = false;
             st.Say("Debugging now off");
         }
     }

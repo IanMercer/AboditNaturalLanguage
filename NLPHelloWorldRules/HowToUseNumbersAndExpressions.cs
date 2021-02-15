@@ -9,8 +9,8 @@ namespace NLPHelloWorldRules
     /// <summary>
     /// AboditNLP supports recognizing integer values (4, 5, six, twenty-one), long values,
     /// double values and rational values.
-    /// 
-    /// It also supports numeric expressions (4 + 5 * 2) which are a subclass for 
+    ///
+    /// It also supports numeric expressions (4 + 5 * 2) which are a subclass for
     /// the other numeric token types
     /// </summary>
     public partial class SampleRules : INLPRule
@@ -19,10 +19,10 @@ namespace NLPHelloWorldRules
         /// This sample rule recognizes a numeric expression
         /// </summary>
         /// <remarks>
-        /// See also <see cref="UserEnteredATemporalExpression"/> which has a higher priority and claims
+        /// See also <see cref="UserEnteredATemporalExpression"/> which has a higher probability and claims
         /// TemporalSets (which inherit from TokenExpression but for which we want a different rule)
         /// </remarks>
-        [Priority(500)]
+        [Priority(500, probability: 0.5)]  // lower probability
         public NLPActionResult UserEnteredANumericExpression(TokenExpression tne)
         {
             if (tne.Type == typeof(double))
@@ -37,13 +37,14 @@ namespace NLPHelloWorldRules
             }
             else if (tne is TemporalSet)
             {
-                throw new System.Exception("Check the relative priority of this rule and UserEnteredATemporalExpression");
+                // The other rule should have fired first because it has a higher probability
+                return NLPActionResult.Continue;
             }
             else
             {
                 st.Say($"You entered an expression {tne.Describe(true)}");
                 st.Say($"You can serialize a token expression {tne.Serialize()}");
-                st.Say($"You can get the unbound variables on it {tne.UnboundVariables}");
+                st.Say($"You can get the unbound variables on it {string.Join(",", tne.UnboundVariables)}");
                 st.Say($"To create variables, add a TokenExpressionVariableAcces to the Lexeme store using the words you want.");
                 st.Say($"You can evaluate a TokenExpression in the context of an environment containing variable values.");
                 st.Say($"You can also convert it to a LINQ Expression or to a SQL Query.");

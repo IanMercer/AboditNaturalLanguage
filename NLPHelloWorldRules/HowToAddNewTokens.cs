@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Abodit;
+﻿using Abodit;
 using AboditNLP;
 using AboditNLP.Tokens;
+using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 
 namespace HelloWorld
 {
@@ -95,8 +95,10 @@ namespace HelloWorld
             var token = new ParsedToken(input.Substring(i), value);
 
             // Finally yield return each match that you have - there may be more than one
+            // You can assign probabilties to each one and this will influence the order of possible
+            // parses in the event that there is an ambiguous parse
 
-            yield return new TokenResult(token, input, start, i, Sensitivity.Default, quality: 1, probability: 1);
+            yield return new TokenResult(token, input, start, i, Sensitivity.Default, probability: 1);
         }
     }
 }

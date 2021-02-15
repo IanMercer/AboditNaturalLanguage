@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net471</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <AssemblyVersion>3.6.0.0</AssemblyVersion>
     <FileVersion>3.6.0.0</FileVersion>
     <Authors>Ian Mercer</Authors>
@@ -12,18 +12,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AboditNLP" Version="3.7.325.1" />
-    <PackageReference Include="AboditNLPDictionary" Version="3.7.325.1" />
-    <PackageReference Include="AboditNLPWordnet" Version="3.7.325.1" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-
+    <PackageReference Include="AboditNLP" Version="3.21.32.2" />
+    <PackageReference Include="AboditNLPDictionary" Version="3.21.32.2" />
+    <PackageReference Include="AboditNLPWordnet" Version="3.21.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
-
 </Project>

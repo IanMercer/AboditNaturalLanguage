@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using log4net;
 using AboditNLP;
 using System.Threading;
 using NLPHelloWorldRules;
@@ -14,19 +12,10 @@ namespace NLPHelloWorld
             string location = AppDomain.CurrentDomain.BaseDirectory;
             Console.WriteLine("Starting in " + location);
 
-            //// Set up the static Logger from XML ...
-            string loggingFileLocation = Path.Combine(location, "log4net.config");
-            FileInfo loggingFileInfo = new FileInfo(loggingFileLocation);
-
-            if (!loggingFileInfo.Exists) throw new ApplicationException("Cannot start without our log4net file");
-
-            log4net.Config.XmlConfigurator.ConfigureAndWatch(loggingFileInfo);
-            var log = LogManager.GetLogger("Global");
-
-            log.Info("                                                 *** STARTING ***\r\n\r\n");
-            log.Info(" Please wait while the dictionaries and rules are loaded.");
-            log.Info(" Since WordNet is included in this demo that may take up to a minute.");
-            log.Info("");
+            Console.WriteLine("                                                 *** STARTING ***\r\n\r\n");
+            Console.WriteLine(" Please wait while the dictionaries and rules are loaded.");
+            Console.WriteLine(" Since WordNet is included in this demo that may take up to a minute.");
+            Console.WriteLine("");
 
             // ----------------------
 
@@ -69,10 +58,7 @@ namespace NLPHelloWorld
             // Use the async call so loading tokens and rules happens in the background
             // and the UI isn't blocked.
 
-            // Create a logger for NLP (calls through to log4net in this case)
-            var logger = new LogFacade();
-
-            nlp.InitializeAsync(logger).ContinueWith((t) =>
+            nlp.InitializeAsync().ContinueWith((t) =>
             {
                 collector.Say("OK, I'm ready now");
                 collector.Say("Hello");
@@ -89,9 +75,6 @@ namespace NLPHelloWorld
             // dependencies that vary on a per-user or a per-request basis, e.g. an IUser object
             //
             var extraState = new ExtraStateInformation();
-
-            // Turn off all debugging
-            NLP.Debugging = false;
 
             var conversationSequence = extraState.ConversationSequence().GetEnumerator();
 

@@ -1,6 +1,7 @@
 ﻿using AboditNLP;
 using AboditNLP.IoC.Autofac;
 using Autofac;
+using Microsoft.Extensions.Logging;
 using NLPHelloWorldRules;
 using System;
 
@@ -18,13 +19,13 @@ namespace NLPHelloWorld
             NLP.SetResolver(new AboditNLP.IoC.Autofac.AutofacResolver(container));
 
             // Create a logger that maps NLP ILogger to log4net
-            var logger = new LogFacade();
+            var logger = new ConsoleLogger();
 
             // Resolve the NLP engine and all of its dependencies (TokenFactories, ...)
             var nlp = container.Resolve<INLP>();
 
             // Start initializing it, but don't wait here
-            nlp.InitializeAsync(logger).ConfigureAwait(false);
+            nlp.InitializeAsync().ConfigureAwait(false);
             return nlp;
         });
 
@@ -58,6 +59,9 @@ namespace NLPHelloWorld
             builder.RegisterAssemblyTypes(typeof(SampleRules).Assembly)
                 .Where(t => t.IsAssignableTo<IIntent>())
                 .AsImplementedInterfaces();
+
+            // Normally logging is handled by dotnetcore hosting registrations
+            builder.RegisterInstance(new ConsoleLogger()).As<ILogger<NLP>>();
 
             // ----------- BUILD ---------------
             return builder.Build();

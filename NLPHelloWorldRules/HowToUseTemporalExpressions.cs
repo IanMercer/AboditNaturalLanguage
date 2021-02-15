@@ -9,7 +9,7 @@ namespace NLPHelloWorldRules
         /// <summary>
         /// This sample rule recognizes any temporal expressions
         /// </summary>
-        [Priority(1000)]
+        [Priority(1000, probability: 0.9)]
         public NLPActionResult UserEnteredATemporalExpression(TemporalSet ts)
         {
             intent.DescribeTemporalSet(st, ts);
