@@ -10,4 +10,4 @@ provided for examples of how to use AboditNLP in your application.
 
 ### Who do I talk to? ###
 
-Contact ian@abodit.com
+Contact ian@signswift.com or on Twitter @ianmercer
