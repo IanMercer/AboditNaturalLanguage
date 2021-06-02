@@ -13,11 +13,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AboditNLP" Version="3.21.32.2" />
-    <PackageReference Include="AboditNLPDictionary" Version="3.21.32.2" />
-    <PackageReference Include="AboditNLPWordnet" Version="3.21.1.1" />
-    <PackageReference Include="AboditNLPWordnetExtended" Version="3.21.1.1" />
-    <PackageReference Include="Autofac.Extras.AboditNLP" Version="3.21.32.2" />
+    <PackageReference Include="AboditNLP" Version="3.21.152.2" />
+    <PackageReference Include="AboditNLPDictionary" Version="3.21.152.2" />
+    <PackageReference Include="AboditNLPWordnet" Version="3.21.152.2" />
+    <PackageReference Include="AboditNLPWordnetExtended" Version="3.21.152.2" />
+    <PackageReference Include="Autofac.Extras.AboditNLP" Version="3.21.152.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
     <ProjectReference Include="..\NLPHelloWorldRules\NLPHelloWorldRules.csproj" />
   </ItemGroup>

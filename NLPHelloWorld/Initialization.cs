@@ -46,6 +46,7 @@ namespace NLPHelloWorld
             builder.RegisterAllNlpParts(typeof(NLP).Assembly);
 
             // Assembly containing your rules
+            // This will register IIntent, INlpRule, ... see INlpPart for everything that gets registered
             builder.RegisterAllNlpParts(typeof(SampleRules).Assembly);
 
             // Include Wordnet it you are using it
@@ -53,12 +54,6 @@ namespace NLPHelloWorld
 
             // And if you want less common words too ...
             builder.RegisterAllNlpParts(typeof(WordnetExtended).Assembly);
-
-            // Register any classes that contain the actual code to run when a sentence
-            // is recognized. So-called "Intent" classes.
-            builder.RegisterAssemblyTypes(typeof(SampleRules).Assembly)
-                .Where(t => t.IsAssignableTo<IIntent>())
-                .AsImplementedInterfaces();
 
             // Normally logging is handled by dotnetcore hosting registrations
             builder.RegisterInstance(new ConsoleLogger()).As<ILogger<NLP>>();

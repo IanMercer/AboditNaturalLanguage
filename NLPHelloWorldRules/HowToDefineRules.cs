@@ -11,10 +11,10 @@ namespace NLPHelloWorldRules
     /// Sentence rules exist in classes that are much like the controller classes in ASP.NET MVC
     /// The NLP Engine uses dependency injection to inject dependencies into your controller classes
     /// A connection between AutoFac and AboditNLP is provided, others can easily be created.
-    /// 
+    ///
     /// You can also inject additional objects into the Execute method which are then passed to
     /// controller classes like this. Do this to avoid having to create a new lifetime scope.
-    /// 
+    ///
     /// You can also use AboditNLP without any additional dependency injection framework, just
     /// inject all the objects needed by your rule classes into the Execute method.
     /// </summary>
@@ -27,12 +27,12 @@ namespace NLPHelloWorldRules
         /// the user is using (chat, email, SMS, Slack, ...) and it might also track a conversation
         /// history allowing responses that refer back to previous components of the conversation
         /// e.g. answers to questions asked of the user, resolution of 'it', 'them' and other words
-        /// that refer back to objects discussed in a prior exchange of messages. 
+        /// that refer back to objects discussed in a prior exchange of messages.
         /// </summary>
         /// <remarks>
         /// As with logging and dependency injection, AboditNLP does not force you into a particular
         /// technology or approach. Interfaces like `IListener` are provided but you don't have to use them.
-        /// 
+        ///
         /// For example, for a web application you may well want to expand IListener to allow partial
         /// page updates to be communicated back to the browser like you saw in the demo on the website.
         /// </remarks>
@@ -56,9 +56,9 @@ namespace NLPHelloWorldRules
         /// anti-pattern in MVC applications. This also makes testing easier - you can mock the
         /// intent class and test each sentence to make sure it calls the appropriate intent method.
         /// </summary>
-        private readonly IIntent intent;
+        private readonly IIntentDemo intent;
 
-        public SampleRules(IListener st, INLP nlp, IIntent intent, ExtraStateInformation es)
+        public SampleRules(IListener st, INLP nlp, IIntentDemo intent, ExtraStateInformation es)
         {
             // store the dependencies
             this.st = st;
@@ -71,7 +71,7 @@ namespace NLPHelloWorldRules
         {
             string now = DateTime.Now.ToShortTimeString();
             st.Say("Hello to you too, it's now " + now);
-            st.Remember(new SampleMemory (now));               // an example of how you can remember things that you spoke about
+            st.Remember(new SampleMemory(now));               // an example of how you can remember things that you spoke about
             return NLPActionResult.None;
         }
 
@@ -88,13 +88,13 @@ namespace NLPHelloWorldRules
             return NLPActionResult.None;
         }
 
-        // Two rules use this method. Typically it would be in an intent, 
+        // Two rules use this method. Typically it would be in an intent,
         // but leaving it here for now as it's showing something else: use of GetLast.
-        void Goodbye()
+        private void Goodbye()
         {
             st.Say("Goodbye");
 
-            // This is how you retrieve items from a per-user memory.  
+            // This is how you retrieve items from a per-user memory.
             // You are free to implement your own scheme for this - the engine itself is agnostic.
             var lastHello = st.GetLast<SampleMemory>();
 
@@ -119,10 +119,10 @@ namespace NLPHelloWorldRules
         /// <summary>
         /// Optional parameters can be used and so can the Permute attribute, so this one rule will recognize
         ///   report Microsoft, Microsoft, Microsoft report
-        ///   
+        ///
         /// Permute attributes can specify a group number allowing multiple independent permutation cycles within a single rule
         /// </summary>
-        public NLPActionResult SentenceOne([Optional][Permute(1)]Verb.report report, [Permute(1)]CompanyName companyName)
+        public NLPActionResult SentenceOne([Optional][Permute(1)] Verb.report report, [Permute(1)] CompanyName companyName)
         {
             // Note how we can conjugate the verb to create the appropriate response even if the interface we used
             // maps onto many different verbs we can still reply with the correct verb and the correct ending
