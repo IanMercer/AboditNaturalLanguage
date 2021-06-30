@@ -5,6 +5,8 @@ using AboditNLP.Pronoun;
 using AboditNLP.Preposition;
 using AboditNLP.Question;
 using AboditNLP.Punctuation;
+using AboditNLP.Noun;
+
 
 namespace NLPHelloWorldRules
 {
@@ -25,7 +27,6 @@ namespace NLPHelloWorldRules
         /// </summary>
         public string OptionalResponsePrefix { get; set; }
     }
-
 
     public partial class SampleRules : INLPRule
     {
